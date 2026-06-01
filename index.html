@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brigadeiros D'Ouro — Doces Artesanais</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ===== LOADER ===== -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">🍫</div>
+      <div class="loader-text">Brigadeiros D'Ouro</div>
+      <div class="loader-bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast-container"></div>
+
+  <!-- ===== MODAL OVERLAY ===== -->
+  <div id="modal-overlay" class="hidden"></div>
+
+  <!-- ===== MODAL: LOGIN / CADASTRO ===== -->
+  <div id="modal-auth" class="modal hidden">
+    <button class="modal-close" onclick="closeModal('modal-auth')">&times;</button>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Entrar</button>
+      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Cadastrar</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="form-login" class="auth-form">
+      <div class="modal-header">
+        <span class="modal-icon">✨</span>
+        <h2>Bem-vindo de volta!</h2>
+        <p>Entre para continuar seus pedidos</p>
+      </div>
+      <div class="form-group">
+        <label for="login-email"><i class="fa fa-envelope"></i> E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="login-password"><i class="fa fa-lock"></i> Senha</label>
+        <div class="input-password">
+          <input type="password" id="login-password" placeholder="••••••••" />
+          <button type="button" class="toggle-pw" onclick="togglePassword('login-password', this)"><i class="fa fa-eye"></i></button>
+        </div>
+      </div>
+      <button class="btn-primary full" onclick="doLogin()">Entrar <i class="fa fa-arrow-right"></i></button>
+      <p class="auth-switch">Não tem conta? <a href="#" onclick="switchAuthTab('register')">Cadastre-se</a></p>
+    </div>
+
+    <!-- Register Form -->
+    <div id="form-register" class="auth-form hidden">
+      <div class="modal-header">
+        <span class="modal-icon">🍫</span>
+        <h2>Crie sua conta</h2>
+        <p>Junte-se à família D'Ouro</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="reg-name"><i class="fa fa-user"></i> Nome</label>
+          <input type="text" id="reg-name" placeholder="Seu nome" />
+        </div>
+        <div class="form-group">
+          <label for="reg-surname"><i class="fa fa-user"></i> Sobrenome</label>
+          <input type="text" id="reg-surname" placeholder="Sobrenome" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-email"><i class="fa fa-envelope"></i> E-mail</label>
+        <input type="email" id="reg-email" placeholder="seu@email.com" />
+      </div>
+      <div class="form-group">
+        <label for="reg-phone"><i class="fa fa-phone"></i> Telefone / WhatsApp</label>
+        <input type="tel" id="reg-phone" placeholder="(11) 99999-9999" oninput="maskPhone(this)" />
+      </div>
+      <div class="form-group">
+        <label for="reg-password"><i class="fa fa-lock"></i> Senha</label>
+        <div class="input-password">
+          <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" />
+          <button type="button" class="toggle-pw" onclick="togglePassword('reg-password', this)"><i class="fa fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-confirm"><i class="fa fa-lock"></i> Confirmar Senha</label>
+        <div class="input-password">
+          <input type="password" id="reg-confirm" placeholder="Repita a senha" />
+          <button type="button" class="toggle-pw" onclick="togglePassword('reg-confirm', this)"><i class="fa fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="form-group checkbox-group">
+        <label><input type="checkbox" id="reg-terms" /> Concordo com os <a href="#" class="gold-link">Termos de Uso</a></label>
+      </div>
+      <button class="btn-primary full" onclick="doRegister()">Criar Conta <i class="fa fa-check"></i></button>
+      <p class="auth-switch">Já tem conta? <a href="#" onclick="switchAuthTab('login')">Entrar</a></p>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CARRINHO ===== -->
+  <div id="modal-cart" class="modal modal-right hidden">
+    <div class="cart-header">
+      <h2><i class="fa fa-shopping-bag"></i> Meu Carrinho</h2>
+      <button class="modal-close" onclick="closeModal('modal-cart')">&times;</button>
+    </div>
+    <div id="cart-items" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cart-total">R$ 0,00</span>
+      </div>
+      <div class="cart-shipping">
+        <span><i class="fa fa-truck"></i> Frete</span>
+        <span id="cart-shipping-val">A calcular</span>
+      </div>
+      <button class="btn-primary full" onclick="goToCheckout()">Finalizar Pedido <i class="fa fa-arrow-right"></i></button>
+      <button class="btn-outline full" onclick="closeModal('modal-cart')">Continuar Comprando</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CHECKOUT ===== -->
+  <div id="modal-checkout" class="modal modal-large hidden">
+    <button class="modal-close" onclick="closeModal('modal-checkout')">&times;</button>
+    <div class="checkout-grid">
+      <!-- Left: Form -->
+      <div class="checkout-form-col">
+        <h2 class="checkout-title"><i class="fa fa-map-marker-alt"></i> Entrega</h2>
+        <div class="form-group">
+          <label>CEP</label>
+          <div class="cep-row">
+            <input type="text" id="checkout-cep" placeholder="00000-000" oninput="maskCep(this)" maxlength="9" />
+            <button class="btn-gold-sm" onclick="lookupCep()"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group flex2">
+            <label>Rua</label>
+            <input type="text" id="checkout-street" placeholder="Rua / Avenida" />
+          </div>
+          <div class="form-group">
+            <label>Número</label>
+            <input type="text" id="checkout-number" placeholder="Nº" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="checkout-neighborhood" placeholder="Bairro" />
+          </div>
+          <div class="form-group">
+            <label>Cidade</label>
+            <input type="text" id="checkout-city" placeholder="Cidade" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Complemento</label>
+          <input type="text" id="checkout-complement" placeholder="Apto, bloco, referência..." />
+        </div>
+
+        <h2 class="checkout-title" style="margin-top:1.5rem"><i class="fa fa-credit-card"></i> Pagamento</h2>
+        <div class="payment-options">
+          <label class="payment-opt" id="pay-pix">
+            <input type="radio" name="payment" value="pix" checked onchange="selectPayment('pix')" />
+            <span class="pay-icon">💠</span> PIX
+          </label>
+          <label class="payment-opt" id="pay-card">
+            <input type="radio" name="payment" value="card" onchange="selectPayment('card')" />
+            <span class="pay-icon">💳</span> Cartão
+          </label>
+          <label class="payment-opt" id="pay-cash">
+            <input type="radio" name="payment" value="cash" onchange="selectPayment('cash')" />
+            <span class="pay-icon">💵</span> Dinheiro
+          </label>
+        </div>
+
+        <div id="card-fields" class="hidden">
+          <div class="form-group">
+            <label>Número do Cartão</label>
+            <input type="text" id="card-number" placeholder="0000 0000 0000 0000" oninput="maskCard(this)" maxlength="19" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Validade</label>
+              <input type="text" id="card-expiry" placeholder="MM/AA" oninput="maskExpiry(this)" maxlength="5" />
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" id="card-cvv" placeholder="000" maxlength="4" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Nome no Cartão</label>
+            <input type="text" id="card-name" placeholder="Como está no cartão" />
+          </div>
+        </div>
+
+        <div id="cash-fields" class="hidden">
+          <div class="form-group">
+            <label>Troco para</label>
+            <input type="text" id="cash-change" placeholder="R$ 0,00" />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:1rem">
+          <label>Observações do pedido</label>
+          <textarea id="checkout-obs" placeholder="Alguma instrução especial? Ex: sem amendoim, embalagem para presente..." rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Right: Summary -->
+      <div class="checkout-summary-col">
+        <h2 class="checkout-title"><i class="fa fa-receipt"></i> Resumo</h2>
+        <div id="checkout-items-list" class="checkout-items-list"></div>
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span id="summary-subtotal">R$ 0,00</span>
+        </div>
+        <div class="summary-line">
+          <span><i class="fa fa-truck"></i> Frete</span>
+          <span id="summary-shipping">R$ 8,00</span>
+        </div>
+        <div class="summary-line total-line">
+          <span>Total</span>
+          <span id="summary-total">R$ 0,00</span>
+        </div>
+        <button class="btn-primary full" onclick="placeOrder()" style="margin-top:1.5rem">
+          <i class="fa fa-check-circle"></i> Confirmar Pedido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: PEDIDO CONFIRMADO ===== -->
+  <div id="modal-success" class="modal modal-sm hidden">
+    <div class="success-content">
+      <div class="success-icon">🎉</div>
+      <h2>Pedido Confirmado!</h2>
+      <p id="success-msg">Seu pedido foi recebido com sucesso. Em breve entraremos em contato!</p>
+      <div class="order-number" id="order-number-display"></div>
+      <button class="btn-primary" onclick="closeModal('modal-success'); closeModal('modal-checkout')">Ver Meus Pedidos</button>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: MEUS PEDIDOS ===== -->
+  <div id="modal-orders" class="modal modal-large hidden">
+    <button class="modal-close" onclick="closeModal('modal-orders')">&times;</button>
+    <h2 class="modal-title-main"><i class="fa fa-box"></i> Meus Pedidos</h2>
+    <div id="orders-list" class="orders-list"></div>
+  </div>
+
+  <!-- ===== MODAL: PRODUTO DETALHE ===== -->
+  <div id="modal-product" class="modal modal-large hidden">
+    <button class="modal-close" onclick="closeModal('modal-product')">&times;</button>
+    <div class="product-detail-grid">
+      <div class="product-detail-img-col">
+        <div id="product-detail-emoji" class="product-detail-emoji"></div>
+      </div>
+      <div class="product-detail-info-col">
+        <div id="product-detail-badge" class="product-badge"></div>
+        <h2 id="product-detail-name"></h2>
+        <p id="product-detail-desc" class="product-detail-desc"></p>
+        <div class="product-detail-meta">
+          <span id="product-detail-weight"></span>
+          <span id="product-detail-unit"></span>
+        </div>
+        <div class="product-detail-price" id="product-detail-price"></div>
+        <div class="qty-selector">
+          <button onclick="changeDetailQty(-1)">−</button>
+          <span id="detail-qty">1</span>
+          <button onclick="changeDetailQty(1)">+</button>
+        </div>
+        <button class="btn-primary" onclick="addDetailToCart()">
+          <i class="fa fa-shopping-bag"></i> Adicionar ao Carrinho
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="main-header">
+    <div class="header-top">
+      <div class="header-top-inner container">
+        <span><i class="fa fa-phone"></i> (11) 99405-7344</span>
+        <span><i class="fa fa-clock"></i> Seg–Sáb: 9h–20h</span>
+        <span><i class="fa fa-map-marker-alt"></i> Ribeirão Preto, SP</span>
+      </div>
+    </div>
+    <nav class="navbar container">
+      <a href="#" class="brand" onclick="scrollToSection('home')">
+        <span class="brand-icon">🍫</span>
+        <span class="brand-text">Brigadeiros <em>D'Ouro</em></span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#" onclick="scrollToSection('home')">Início</a></li>
+        <li><a href="#" onclick="scrollToSection('about')">Sobre</a></li>
+        <li><a href="#" onclick="scrollToSection('catalog')">Cardápio</a></li>
+        <li><a href="#" onclick="scrollToSection('testimonials')">Avaliações</a></li>
+        <li><a href="#" onclick="scrollToSection('contact')">Contato</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-cart" onclick="openCart()" title="Carrinho">
+          <i class="fa fa-shopping-bag"></i>
+          <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+        <div id="user-menu" class="user-menu hidden">
+          <button class="btn-user" onclick="toggleUserDropdown()">
+            <i class="fa fa-user-circle"></i>
+            <span id="user-name-display">Olá!</span>
+            <i class="fa fa-chevron-down"></i>
+          </button>
+          <div class="user-dropdown" id="user-dropdown">
+            <a href="#" onclick="openOrders()"><i class="fa fa-box"></i> Meus Pedidos</a>
+            <a href="#" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Sair</a>
+          </div>
+        </div>
+        <button id="btn-login-nav" class="btn-outline-gold" onclick="openModal('modal-auth')">
+          <i class="fa fa-user"></i> Entrar
+        </button>
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="home" class="hero">
+    <div class="hero-particles" id="hero-particles"></div>
+    <div class="hero-content container">
+      <div class="hero-badge">✨ Artesanal &amp; Premium</div>
+      <h1 class="hero-title">
+        O sabor que <br /><span class="gold-text">derrete seu coração</span>
+      </h1>
+      <p class="hero-subtitle">
+        Brigadeiros artesanais feitos com ingredientes selecionados, muito amor e o toque dourado que só a D'Ouro tem.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary btn-lg" onclick="scrollToSection('catalog')">
+          <i class="fa fa-star"></i> Ver Cardápio
+        </button>
+        <button class="btn-outline-white btn-lg" onclick="scrollToSection('about')">
+          Nossa História
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong>+500</strong><span>Clientes felizes</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>+30</strong><span>Sabores únicos</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>100%</strong><span>Artesanal</span></div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Role para baixo</span>
+      <i class="fa fa-chevron-down bounce"></i>
+    </div>
+  </section>
+
+  <!-- ===== BANNER FLUTUANTE ===== -->
+  <div class="floating-banner">
+    <div class="container floating-banner-inner">
+      <span>🎁 Caixas para presente</span>
+      <span>🚚 Entrega em Ribeirão Preto</span>
+      <span>🍫 Ingredientes premium</span>
+      <span>⭐ Mais de 50 avaliações 5 estrelas</span>
+      <span>🎂 Encomendas para eventos</span>
+    </div>
+  </div>
+
+  <!-- ===== SOBRE ===== -->
+  <section id="about" class="about section">
+    <div class="container about-grid">
+      <div class="about-visual">
+        <div class="about-img-frame">
+          <div class="about-emoji-big">🍫</div>
+          <div class="about-badge-float">Desde 2025</div>
+        </div>
+        <div class="about-numbers">
+          <div class="about-num"><strong>1</strong><span>Ano de tradição</span></div>
+          <div class="about-num"><strong>1.000k+</strong><span>Doces vendidos</span></div>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="section-label">Nossa História</div>
+        <h2 class="section-title">Uma receita de <span class="gold-text">amor e tradição</span></h2>
+        <p>A Brigadeiros D'Ouro nasceu em 2025 de uma paixão familiar pela confeitaria artesanal. O que começou como uma receita de família passou a encantar vizinhos, amigos e, logo, toda a cidade.</p>
+        <p>Cada brigadeiro é feito à mão, com leite condensado de primeira qualidade, manteiga sem sal e coberturas selecionadas. Sem conservantes, sem pressa — apenas o sabor autêntico que você merece.</p>
+        <div class="about-features">
+          <div class="about-feat"><i class="fa fa-leaf"></i><span>Ingredientes naturais</span></div>
+          <div class="about-feat"><i class="fa fa-hand-holding-heart"></i><span>Feito à mão</span></div>
+          <div class="about-feat"><i class="fa fa-award"></i><span>Qualidade premium</span></div>
+          <div class="about-feat"><i class="fa fa-box-open"></i><span>Embalagem especial</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CATÁLOGO ===== -->
+  <section id="catalog" class="catalog section">
+    <div class="container">
+      <div class="section-label center">Nosso Cardápio</div>
+      <h2 class="section-title center">Escolha o seu <span class="gold-text">favorito</span></h2>
+      <p class="section-sub center">Brigadeiros artesanais em sabores clássicos e especiais. Todos feitos com amor e ingredientes selecionados.</p>
+
+      <!-- Filter Tabs -->
+      <div class="catalog-filters">
+        <button class="filter-btn active" onclick="filterCatalog('all', this)">Todos</button>
+        <button class="filter-btn" onclick="filterCatalog('classic', this)">Clássicos</button>
+        <button class="filter-btn" onclick="filterCatalog('special', this)">Especiais</button>
+        <button class="filter-btn" onclick="filterCatalog('box', this)">Caixas</button>
+        <button class="filter-btn" onclick="filterCatalog('seasonal', this)">Sazonais</button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== BANNER CTA ===== -->
+  <section class="cta-banner">
+    <div class="container cta-inner">
+      <div class="cta-text">
+        <h2>Tem um evento especial? 🎉</h2>
+        <p>Fazemos encomendas para casamentos, aniversários, formaturas e muito mais. Caixas personalizadas com sua mensagem!</p>
+      </div>
+      <button class="btn-white-gold btn-lg" onclick="scrollToSection('contact')">
+        Fazer Encomenda <i class="fa fa-arrow-right"></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== DEPOIMENTOS ===== -->
+  <section id="testimonials" class="testimonials section">
+    <div class="container">
+      <div class="section-label center">Avaliações</div>
+      <h2 class="section-title center">O que nossos <span class="gold-text">clientes dizem</span></h2>
+      <div class="testimonials-grid" id="testimonials-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== CONTATO ===== -->
+  <section id="contact" class="contact section">
+    <div class="container contact-grid">
+      <div class="contact-info">
+        <div class="section-label">Fale Conosco</div>
+        <h2 class="section-title">Entre em <span class="gold-text">contato</span></h2>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fa fa-whatsapp fab"></i></div>
+          <div>
+            <strong>WhatsApp</strong>
+            <p>(16) 99405-7344</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fa fa-envelope"></i></div>
+          <div>
+            <strong>E-mail</strong>
+            <p>brigadeirosdouro@gmail.com</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fa fa-map-marker-alt"></i></div>
+          <div>
+            <strong>Endereço</strong>
+            <p>Trabalho remoto para trazer o melhor preço da região!</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fa fa-clock"></i></div>
+          <div>
+            <strong>Horário</strong>
+            <p>Seg–Sáb: 9h às 20h | Dom: 10h às 16h</p>
+          </div>
+        </div>
+        <div class="social-links">
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="contact-form-wrap">
+        <h3>Envie uma mensagem</h3>
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="contact-name" placeholder="Seu nome completo" />
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="contact-email" placeholder="seu@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Assunto</label>
+          <select id="contact-subject">
+            <option value="">Selecione...</option>
+            <option>Encomenda para evento</option>
+            <option>Dúvida sobre produtos</option>
+            <option>Parceria comercial</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Mensagem</label>
+          <textarea id="contact-message" rows="5" placeholder="Escreva sua mensagem..."></textarea>
+        </div>
+        <button class="btn-primary full" onclick="sendContact()">
+          <i class="fa fa-paper-plane"></i> Enviar Mensagem
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <span class="brand-icon">🍫</span>
+          <span class="brand-text">Brigadeiros <em>D'Ouro</em></span>
+        </div>
+        <p>Doces artesanais feitos com amor e ingredientes premium desde 2015.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#" onclick="scrollToSection('home')">Início</a></li>
+          <li><a href="#" onclick="scrollToSection('about')">Sobre Nós</a></li>
+          <li><a href="#" onclick="scrollToSection('catalog')">Cardápio</a></li>
+          <li><a href="#" onclick="scrollToSection('contact')">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Produtos</h4>
+        <ul>
+          <li><a href="#">Brigadeiros Clássicos</a></li>
+          <li><a href="#">Brigadeiros Especiais</a></li>
+          <li><a href="#">Caixas Presente</a></li>
+          <li><a href="#">Encomendas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Atendimento</h4>
+        <ul>
+          <li><a href="#">Perguntas Frequentes</a></li>
+          <li><a href="#">Política de Entrega</a></li>
+          <li><a href="#">Termos de Uso</a></li>
+          <li><a href="#">Privacidade</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2025 Brigadeiros D'Ouro. Todos os direitos reservados.</p>
+        <p>Feito com <span style="color:#D4AF37">♥</span> em Ribeirão Preto</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== BOTÃO VOLTAR AO TOPO ===== -->
+  <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Voltar ao topo">
+    <i class="fa fa-chevron-up"></i>
+  </button>
+
+  <!-- ===== WHATSAPP FLOAT ===== -->
+  <a href="https://wa.me/5511999998888" target="_blank" class="whatsapp-float" title="Fale pelo WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <script src="script.js"></script>
+</body>
+</html>

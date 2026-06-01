@@ -1,1 +1,1 @@
-# TCC-Brigadeiros-D-Ouro
+# TCC-BRIGADEIROS-D-Ouro
