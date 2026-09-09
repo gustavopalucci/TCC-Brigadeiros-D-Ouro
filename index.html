@@ -15,7 +15,7 @@
   <!-- ===== LOADER ===== -->
   <div id="loader">
     <div class="loader-inner">
-      <div class="loader-logo">🍫</div>
+      <div class="loader-logo">Brigadeiros D'Ouro</div>
       <div class="loader-text">Brigadeiros D'Ouro</div>
       <div class="loader-bar"><span></span></div>
     </div>
@@ -56,13 +56,13 @@
         </div>
       </div>
       <button class="btn-primary full" onclick="doLogin()">Entrar <i class="fa fa-arrow-right"></i></button>
-      <p class="auth-switch">Não tem conta? <a href="#" onclick="switchAuthTab('register')">Cadastre-se</a></p>
+      <p class="auth-switch">Não tem conta? <a href="#" onclick="switchAuthTab('register'); return false;">Cadastre-se</a></p>
     </div>
 
     <!-- Register Form -->
     <div id="form-register" class="auth-form hidden">
       <div class="modal-header">
-        <span class="modal-icon">🍫</span>
+        <span class="modal-icon">Brigadeiros D'Ouro</span>
         <h2>Crie sua conta</h2>
         <p>Junte-se à família D'Ouro</p>
       </div>
@@ -102,7 +102,7 @@
         <label><input type="checkbox" id="reg-terms" /> Concordo com os <a href="#" class="gold-link">Termos de Uso</a></label>
       </div>
       <button class="btn-primary full" onclick="doRegister()">Criar Conta <i class="fa fa-check"></i></button>
-      <p class="auth-switch">Já tem conta? <a href="#" onclick="switchAuthTab('login')">Entrar</a></p>
+      <p class="auth-switch">Já tem conta? <a href="#" onclick="switchAuthTab('login'); return false;">Entrar</a></p>
     </div>
   </div>
 
@@ -174,7 +174,7 @@
           </label>
           <label class="payment-opt" id="pay-card">
             <input type="radio" name="payment" value="card" onchange="selectPayment('card')" />
-            <span class="pay-icon">💳</span> Cartão
+            <span class="pay-icon">💳</span> Cartão  
           </label>
           <label class="payment-opt" id="pay-cash">
             <input type="radio" name="payment" value="cash" onchange="selectPayment('cash')" />
@@ -295,16 +295,16 @@
       </div>
     </div>
     <nav class="navbar container">
-      <a href="#" class="brand" onclick="scrollToSection('home')">
+      <a href="#home" class="brand" onclick="scrollToSection('home'); return false;">
         <span class="brand-icon">🍫</span>
         <span class="brand-text">Brigadeiros <em>D'Ouro</em></span>
       </a>
       <ul class="nav-links" id="nav-links">
-        <li><a href="#" onclick="scrollToSection('home')">Início</a></li>
-        <li><a href="#" onclick="scrollToSection('about')">Sobre</a></li>
-        <li><a href="#" onclick="scrollToSection('catalog')">Cardápio</a></li>
-        <li><a href="#" onclick="scrollToSection('testimonials')">Avaliações</a></li>
-        <li><a href="#" onclick="scrollToSection('contact')">Contato</a></li>
+        <li><a href="#home" onclick="scrollToSection('home'); return false;">Início</a></li>
+        <li><a href="#about" onclick="scrollToSection('about'); return false;">Sobre</a></li>
+        <li><a href="#catalog" onclick="scrollToSection('catalog'); return false;">Cardápio</a></li>
+        <li><a href="#testimonials" onclick="scrollToSection('testimonials'); return false;">Avaliações</a></li>
+        <li><a href="#contact" onclick="scrollToSection('contact'); return false;">Contato</a></li>
       </ul>
       <div class="nav-actions">
         <button class="btn-cart" onclick="openCart()" title="Carrinho">
@@ -318,8 +318,8 @@
             <i class="fa fa-chevron-down"></i>
           </button>
           <div class="user-dropdown" id="user-dropdown">
-            <a href="#" onclick="openOrders()"><i class="fa fa-box"></i> Meus Pedidos</a>
-            <a href="#" onclick="doLogout()"><i class="fa fa-sign-out-alt"></i> Sair</a>
+            <a href="#" onclick="openOrders(); return false;"><i class="fa fa-box"></i> Meus Pedidos</a>
+            <a href="#" onclick="doLogout(); return false;"><i class="fa fa-sign-out-alt"></i> Sair</a>
           </div>
         </div>
         <button id="btn-login-nav" class="btn-outline-gold" onclick="openModal('modal-auth')">
@@ -344,10 +344,10 @@
         Brigadeiros artesanais feitos com ingredientes selecionados, muito amor e o toque dourado que só a D'Ouro tem.
       </p>
       <div class="hero-actions">
-        <button class="btn-primary btn-lg" onclick="scrollToSection('catalog')">
+        <button type="button" class="btn-primary btn-lg" onclick="scrollToSection('catalog')">
           <i class="fa fa-star"></i> Ver Cardápio
         </button>
-        <button class="btn-outline-white btn-lg" onclick="scrollToSection('about')">
+        <button type="button" class="btn-outline-white btn-lg" onclick="scrollToSection('about')">
           Nossa História
         </button>
       </div>
@@ -381,7 +381,7 @@
     <div class="container about-grid">
       <div class="about-visual">
         <div class="about-img-frame">
-          <div class="about-emoji-big">🍫</div>
+          <div class="about-emoji-big">Brigadeiro D'Ouro</div>
           <div class="about-badge-float">Desde 2025</div>
         </div>
         <div class="about-numbers">
@@ -432,7 +432,7 @@
         <h2>Tem um evento especial? 🎉</h2>
         <p>Fazemos encomendas para casamentos, aniversários, formaturas e muito mais. Caixas personalizadas com sua mensagem!</p>
       </div>
-      <button class="btn-white-gold btn-lg" onclick="scrollToSection('contact')">
+      <button type="button" class="btn-white-gold btn-lg" onclick="scrollToSection('contact')">
         Fazer Encomenda <i class="fa fa-arrow-right"></i>
       </button>
     </div>
@@ -536,10 +536,10 @@
       <div class="footer-col">
         <h4>Navegação</h4>
         <ul>
-          <li><a href="#" onclick="scrollToSection('home')">Início</a></li>
+          <li><a href="#home" onclick="scrollToSection('home'); return false;">Início</a></li>
           <li><a href="#" onclick="scrollToSection('about')">Sobre Nós</a></li>
-          <li><a href="#" onclick="scrollToSection('catalog')">Cardápio</a></li>
-          <li><a href="#" onclick="scrollToSection('contact')">Contato</a></li>
+          <li><a href="#catalog" onclick="scrollToSection('catalog'); return false;">Cardápio</a></li>
+          <li><a href="#contact" onclick="scrollToSection('contact'); return false;">Contato</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -575,7 +575,7 @@
   </button>
 
   <!-- ===== WHATSAPP FLOAT ===== -->
-  <a href="https://wa.me/5511999998888" target="_blank" class="whatsapp-float" title="Fale pelo WhatsApp">
+  <a href="https://wa.me/5516994057344" target="_blank" class="whatsapp-float" title="Fale pelo WhatsApp">
     <i class="fab fa-whatsapp"></i>
   </a>
 
