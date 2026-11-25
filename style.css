@@ -333,7 +333,7 @@ h2 span {
   background: linear-gradient(135deg, #fff8ef, #f2e0c2);
 }
 .image-copo {
-  background: linear-gradient(135deg, #fff8e7, #e9d4a8);
+  background: linear-gradient(135deg, #fff8e7, #f0ebe1);
 }
 .image-grape {
   background: linear-gradient(135deg, #f8f0ff, #eadbfa);
@@ -520,62 +520,82 @@ h2 span {
   transform: scale(1.08);
 }
 
-@media (max-width: 800px) {
-  .main-nav {
-    position: absolute;
-    top: 76px;
-    right: 20px;
-    left: 20px;
-    display: none;
-    flex-direction: column;
-    gap: 0;
-    padding: 10px;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    background: var(--white);
-    box-shadow: var(--shadow);
-  }
-  .main-nav.is-open {
-    display: flex;
-  }
-  .main-nav a {
-    padding: 12px;
-  }
-  .header-whatsapp {
-    display: none;
-  }
-  .menu-toggle {
-    display: block;
-  }
-  .catalog-grid,
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-  .product-card-wide {
-    grid-column: auto;
-    display: flex;
-  }
-  .product-card-wide .product-image {
-    height: auto;
-    min-height: 0;
-    aspect-ratio: 4 / 3;
-  }
-  .product-card-wide .product-image > img,
-  .product-card-wide .product-image .imagem-produto {
-    height: 100%;
-  }
-  .contact-box,
-  .footer-content {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .contact-box {
-    padding: 34px 26px;
-  }
+/* Telas intermediárias e desktop */
+@media (min-width: 801px) {
   .section {
-    padding: 75px 0;
+    padding-block: clamp(76px, 6vw, 110px);
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 2vw, 30px);
+    width: min(100% - 48px, 1280px);
+    margin-inline: auto;
+  }
+
+  .product-card-wide {
+    grid-column: span 2;
+  }
+
+  .about-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(28px, 4vw, 60px);
+    width: min(100% - 48px, 1280px);
+    margin-inline: auto;
+  }
+
+  .main-nav {
+    gap: clamp(18px, 2vw, 32px);
   }
 }
+
+/* Desktops e notebooks com tela ampla */
+@media (min-width: 1100px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(100% - 64px, 1440px);
+    gap: clamp(24px, 2vw, 36px);
+  }
+
+  .about-grid {
+    width: min(100% - 64px, 1440px);
+  }
+}
+
+/* Monitores grandes e televisões */
+@media (min-width: 1600px) {
+  .section {
+    padding-block: clamp(100px, 6vw, 140px);
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(100% - 96px, 1720px);
+    gap: clamp(28px, 2vw, 42px);
+  }
+
+  .about-grid {
+    width: min(100% - 96px, 1600px);
+    gap: clamp(48px, 5vw, 88px);
+  }
+}
+
+/* Evita que textos e imagens causem rolagem horizontal */
+.catalog-grid,
+.about-grid {
+  min-width: 0;
+}
+
+.catalog-grid > *,
+.about-grid > * {
+  min-width: 0;
+}
+
+.catalog-grid img,
+.about-grid img {
+  max-width: 100%;
+}
+
 @media (max-width: 480px) {
   .container {
     width: min(100% - 28px, 1160px);
@@ -607,4 +627,13 @@ h2 span {
   .about-visual strong {
     font-size: 6rem;
   }
+}
+
+.imagem-produto {
+  display: block;
+  width: 110%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
 }
