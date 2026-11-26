@@ -521,7 +521,7 @@ h2 span {
 }
 
 /* Telas intermediárias e desktop */
-@media (min-width: 801px) {
+@media (min-width: 1024px) {
   .section {
     padding-block: clamp(76px, 6vw, 110px);
   }
@@ -563,7 +563,7 @@ h2 span {
 }
 
 /* Monitores grandes e televisões */
-@media (min-width: 1600px) {
+@media (min-width: 1920px) {
   .section {
     padding-block: clamp(100px, 6vw, 140px);
   }
@@ -597,6 +597,15 @@ h2 span {
 }
 
 @media (max-width: 480px) {
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card-wide {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
   .container {
     width: min(100% - 28px, 1160px);
   }
@@ -636,4 +645,18 @@ h2 span {
   max-width: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+/* Notebook: 3 colunas */
+@media (min-width: 1024px) {
+  .catalog-grid > .product-card:not(.product-card-wide):nth-child(3n + 1):nth-last-child(2) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Telas médias: 2 colunas */
+@media (min-width: 481px) and (max-width: 1023px) {
+  .catalog-grid > .product-card:not(.product-card-wide):nth-child(2n + 1):nth-last-child(2) {
+    grid-column: 1 / -1;
+  }
 }
